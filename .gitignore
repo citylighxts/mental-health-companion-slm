@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Claude Code
+.claude/
+
+# Raw source dataset (re-downloadable from Hugging Face, see docs/references.md)
+dataset/raw/
+
+# Model weights & checkpoints (too large for git — GBs, regenerate from adapters/config)
+models/
+training/adapters/
+
+# OS
+.DS_Store

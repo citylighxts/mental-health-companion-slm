@@ -1,0 +1,7 @@
+anthropic
+mlx-lm
+torch==2.7.0
+transformers
+coremltools
+safetensors
+huggingface_hub
