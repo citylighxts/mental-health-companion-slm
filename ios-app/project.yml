@@ -1,0 +1,41 @@
+name: MentalHealthCompanion
+options:
+  bundleIdPrefix: com.hanaazizah
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  swift-transformers:
+    url: https://github.com/huggingface/swift-transformers
+    from: "1.3.3"
+targets:
+  MentalHealthCompanion:
+    type: application
+    platform: iOS
+    sources:
+      - path: MentalHealthCompanion
+        excludes:
+          - "Resources/**"
+      - path: MentalHealthCompanion/Resources/MentalHealthCompanionInt4.mlpackage
+      - path: MentalHealthCompanion/Resources/tokenizer.json
+      - path: MentalHealthCompanion/Resources/tokenizer_config.json
+      - path: MentalHealthCompanion/Resources/special_tokens_map.json
+      - path: MentalHealthCompanion/Resources/chat_template.jinja
+    info:
+      path: MentalHealthCompanion/Info.plist
+      properties:
+        UILaunchScreen: {}
+        CFBundleDisplayName: Teman Curhat
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.hanaazizah.mentalhealthcompanion
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+    dependencies:
+      - package: swift-transformers
+        product: Tokenizers

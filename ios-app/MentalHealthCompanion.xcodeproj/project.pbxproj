@@ -1,0 +1,377 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14086852145F98FC86E2FA40 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0962D34C0D3025D6A71D1286 /* ChatMessage.swift */; };
+		1AEC2CB8CD14DC4BA69DF3C4 /* tokenizer.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A2FB855ECD59E8DAD07964B /* tokenizer.json */; };
+		4FB1895F9B78C53B64826628 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EA948368A835B4172128A0 /* ContentView.swift */; };
+		8E1530721A27CC57A2930173 /* special_tokens_map.json in Resources */ = {isa = PBXBuildFile; fileRef = 097852972E4AD017D6C2499A /* special_tokens_map.json */; };
+		9BF00141AD5B25352A61DA04 /* MentalHealthCompanionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4F0244587BD443F39FFA86 /* MentalHealthCompanionApp.swift */; };
+		AA7E6F962D03DF6EAD0C4F6E /* chat_template.jinja in Resources */ = {isa = PBXBuildFile; fileRef = 34299E47D92FF16FDCB9C307 /* chat_template.jinja */; };
+		AECEF81ADC6921E477E37C58 /* Tokenizers in Frameworks */ = {isa = PBXBuildFile; productRef = 8B2588260E76DD3962873CE5 /* Tokenizers */; };
+		B6C6A006E9F17D8665757510 /* MentalHealthCompanionInt4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */; };
+		C2E8284494DA19F47CA0E0E6 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2F80DDDC8CD0F9FE2C303 /* ChatViewModel.swift */; };
+		DDD24408521F189599DCBB84 /* tokenizer_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 7D655411E82A5F7AA2295CB7 /* tokenizer_config.json */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */ = {isa = PBXFileReference; path = MentalHealthCompanionInt4.mlpackage; sourceTree = "<group>"; };
+		0962D34C0D3025D6A71D1286 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		097852972E4AD017D6C2499A /* special_tokens_map.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = special_tokens_map.json; sourceTree = "<group>"; };
+		29E501363142C53305091DD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2A2FB855ECD59E8DAD07964B /* tokenizer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tokenizer.json; sourceTree = "<group>"; };
+		34299E47D92FF16FDCB9C307 /* chat_template.jinja */ = {isa = PBXFileReference; path = chat_template.jinja; sourceTree = "<group>"; };
+		44F635C77892492008C8B3E6 /* MentalHealthCompanion.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MentalHealthCompanion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D655411E82A5F7AA2295CB7 /* tokenizer_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tokenizer_config.json; sourceTree = "<group>"; };
+		A7EA948368A835B4172128A0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AE4F0244587BD443F39FFA86 /* MentalHealthCompanionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentalHealthCompanionApp.swift; sourceTree = "<group>"; };
+		C1B2F80DDDC8CD0F9FE2C303 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EB9C0980DEB035290DDCEAEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AECEF81ADC6921E477E37C58 /* Tokenizers in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		15B17C083228AE09386FE041 /* MentalHealthCompanion */ = {
+			isa = PBXGroup;
+			children = (
+				0962D34C0D3025D6A71D1286 /* ChatMessage.swift */,
+				C1B2F80DDDC8CD0F9FE2C303 /* ChatViewModel.swift */,
+				A7EA948368A835B4172128A0 /* ContentView.swift */,
+				29E501363142C53305091DD9 /* Info.plist */,
+				AE4F0244587BD443F39FFA86 /* MentalHealthCompanionApp.swift */,
+				40DB460D614E075628F0C08D /* Resources */,
+			);
+			path = MentalHealthCompanion;
+			sourceTree = "<group>";
+		};
+		237D69B51B202113D35712C6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				44F635C77892492008C8B3E6 /* MentalHealthCompanion.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		40DB460D614E075628F0C08D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				34299E47D92FF16FDCB9C307 /* chat_template.jinja */,
+				00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */,
+				097852972E4AD017D6C2499A /* special_tokens_map.json */,
+				7D655411E82A5F7AA2295CB7 /* tokenizer_config.json */,
+				2A2FB855ECD59E8DAD07964B /* tokenizer.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6DD389358D81DB3D11F645DE = {
+			isa = PBXGroup;
+			children = (
+				15B17C083228AE09386FE041 /* MentalHealthCompanion */,
+				237D69B51B202113D35712C6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6D9B70AECA0688D6767A6A3A /* MentalHealthCompanion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 588837ACB89CAC124E7A1889 /* Build configuration list for PBXNativeTarget "MentalHealthCompanion" */;
+			buildPhases = (
+				370F3A18F2829F1E59D9BC7F /* Sources */,
+				33D0628CA9A986F6AF2B7550 /* Resources */,
+				EB9C0980DEB035290DDCEAEB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MentalHealthCompanion;
+			packageProductDependencies = (
+				8B2588260E76DD3962873CE5 /* Tokenizers */,
+			);
+			productName = MentalHealthCompanion;
+			productReference = 44F635C77892492008C8B3E6 /* MentalHealthCompanion.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		44CF2D445BB4E5137D7E56A7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = D50104A7C29E3DFF9018CEF6 /* Build configuration list for PBXProject "MentalHealthCompanion" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 6DD389358D81DB3D11F645DE;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				18A1F327B9302841E9F20C97 /* XCRemoteSwiftPackageReference "swift-transformers" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 237D69B51B202113D35712C6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6D9B70AECA0688D6767A6A3A /* MentalHealthCompanion */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		33D0628CA9A986F6AF2B7550 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA7E6F962D03DF6EAD0C4F6E /* chat_template.jinja in Resources */,
+				8E1530721A27CC57A2930173 /* special_tokens_map.json in Resources */,
+				1AEC2CB8CD14DC4BA69DF3C4 /* tokenizer.json in Resources */,
+				DDD24408521F189599DCBB84 /* tokenizer_config.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		370F3A18F2829F1E59D9BC7F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14086852145F98FC86E2FA40 /* ChatMessage.swift in Sources */,
+				C2E8284494DA19F47CA0E0E6 /* ChatViewModel.swift in Sources */,
+				4FB1895F9B78C53B64826628 /* ContentView.swift in Sources */,
+				9BF00141AD5B25352A61DA04 /* MentalHealthCompanionApp.swift in Sources */,
+				B6C6A006E9F17D8665757510 /* MentalHealthCompanionInt4.mlpackage in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0367073B696F3DAA01CD30EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = MentalHealthCompanion/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanaazizah.mentalhealthcompanion;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		474B0442D6EA049AB2B57AF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		85E399E2C292A226E34B76E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				INFOPLIST_FILE = MentalHealthCompanion/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hanaazizah.mentalhealthcompanion;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A32968BA3A3924E1F2B3FAC4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		588837ACB89CAC124E7A1889 /* Build configuration list for PBXNativeTarget "MentalHealthCompanion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				85E399E2C292A226E34B76E5 /* Debug */,
+				0367073B696F3DAA01CD30EE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D50104A7C29E3DFF9018CEF6 /* Build configuration list for PBXProject "MentalHealthCompanion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				474B0442D6EA049AB2B57AF5 /* Debug */,
+				A32968BA3A3924E1F2B3FAC4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		18A1F327B9302841E9F20C97 /* XCRemoteSwiftPackageReference "swift-transformers" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huggingface/swift-transformers";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8B2588260E76DD3962873CE5 /* Tokenizers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18A1F327B9302841E9F20C97 /* XCRemoteSwiftPackageReference "swift-transformers" */;
+			productName = Tokenizers;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 44CF2D445BB4E5137D7E56A7 /* Project object */;
+}
