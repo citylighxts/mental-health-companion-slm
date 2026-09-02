@@ -13,5 +13,16 @@ dataset/raw/
 models/
 training/adapters/
 
+# iOS app build output + bundled model/tokenizer resources (regenerate via
+# scripts/convert_coreml.py output copied into Resources/, see ios-app README)
+ios-app/build/
+ios-app/MentalHealthCompanion/Resources/*.mlpackage
+ios-app/MentalHealthCompanion/Resources/tokenizer*.json
+ios-app/MentalHealthCompanion/Resources/special_tokens_map.json
+ios-app/MentalHealthCompanion/Resources/chat_template.jinja
+
+# Swift Package Manager build cache
+.build/
+
 # OS
 .DS_Store
