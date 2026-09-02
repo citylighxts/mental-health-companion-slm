@@ -90,10 +90,19 @@ final class ChatViewModel: ObservableObject {
             }
             let tok = try await AutoTokenizer.from(modelFolder: resourceURL)
             let config = MLModelConfiguration()
-            // .cpuOnly is required on the iOS Simulator — .cpuAndGPU / .all fails to
-            // build an execution plan there for this stateful INT4 model (error -14).
-            // On a real device (with ANE), switch to .all for much better throughput.
-            config.computeUnits = .cpuOnly
+            // .all (CPU+GPU+ANE) is required for correct output on a real device.
+            //
+            // IMPORTANT — iOS SIMULATOR CANNOT RUN THIS MODEL CORRECTLY AT ALL:
+            // the Simulator has no real Neural Engine (only a software fallback),
+            // and every compute-unit combination was tried and confirmed broken
+            // there: .cpuOnly loads but produces degenerate/repetitive output;
+            // .cpuAndGPU / .all fails to even build an execution plan (error -14);
+            // .cpuAndNeuralEngine loads but is equally degenerate. This was
+            // verified against the identical prefill+decode logic running natively
+            // on macOS (coreml-debug-test/), which produces correct, on-tone
+            // output with .all — so the bug is a Simulator limitation, not this
+            // code. Test this app on a physical device.
+            config.computeUnits = .all
             let model = try MLModel(contentsOf: modelURL, configuration: config)
             tokenizer = tok
             mlModel = model
