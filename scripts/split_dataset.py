@@ -24,21 +24,35 @@ def _opening(row: dict) -> str:
 
 
 def split_conversations(rows, *, seed: int = SEED, ratios=RATIOS):
-    by_stratum = defaultdict(list)
+    """Stratified split that assigns identical openings as a unit.
+
+    Rows sharing an opening user message form one group; a group is assigned to a
+    single split, so a duplicated opening can never leak across splits. The stratum
+    key is the (label, turn_type) of the group's first row.
+    """
+    by_opening = defaultdict(list)
     for r in rows:
-        by_stratum[(r["label"], turn_type(r))].append(r)
+        by_opening[_opening(r)].append(r)
+
+    by_stratum = defaultdict(list)
+    for _, group in sorted(by_opening.items()):  # sorted -> input-order independent
+        by_stratum[(group[0]["label"], turn_type(group[0]))].append(group)
 
     train, valid, test = [], [], []
-    for _, items in sorted(by_stratum.items()):
+    for _, groups in sorted(by_stratum.items()):
         rng = random.Random(seed)
-        rng.shuffle(items)
-        n = len(items)
+        rng.shuffle(groups)
+        n = len(groups)
         n_train = round(n * ratios[0])
         n_valid = round(n * ratios[1])
-        train += items[:n_train]
-        valid += items[n_train:n_train + n_valid]
-        test += items[n_train + n_valid:]
+        for g in groups[:n_train]:
+            train += g
+        for g in groups[n_train:n_train + n_valid]:
+            valid += g
+        for g in groups[n_train + n_valid:]:
+            test += g
 
+    # now an invariant, not a guard: grouping above makes a leak impossible
     for a, b, name in [(train, valid, "train/valid"), (train, test, "train/test"), (valid, test, "valid/test")]:
         overlap = {_opening(r) for r in a} & {_opening(r) for r in b}
         if overlap:

@@ -10,7 +10,8 @@ Kamu dikasih satu postingan media sosial berbahasa Inggris + satu kategori kondi
 
 1. TRANSCREATE postingan itu jadi SATU pesan chat pembuka, sudut pandang orang pertama,
    gaya anak muda Indonesia: huruf kecil, singkatan, typo wajar, slang campur
-   ("anjir", "capek bat", "jir", "mager", "gabut", "mboh", "gaada abisnya"). Bukan
+   ("anjir", "capek bat", "jir", "asu", "lebay", "mager", "gabut", "mboh",
+   "gaada abisnya"). Bukan
    terjemahan harfiah — tulis ulang jadi kayak orang beneran ngetik ke temennya.
 2. Lanjutin jadi percakapan utuh. Kamu meranin DUA sisi (user dan asisten).
 
@@ -55,7 +56,7 @@ FEWSHOT = [
         "label": "Anxiety",
         "single_turn": False,
         "messages": [
-            {"role": "user", "content": "anjir besok interview gua deg2an parah gabisa tidur"},
+            {"role": "user", "content": "anjir besok interview nih gua deg2an parah gabisa tidur"},
             {"role": "assistant", "content": "Malam sebelum interview emang paling brutal — kepala muter terus mikirin besok. Wajar banget badan kamu nolak buat rileks."},
             {"role": "user", "content": "takut blank pas ditanya"},
             {"role": "assistant", "content": "Takut blank itu manusiawi banget, dan biasanya pas momennya dateng kamu lebih siap dari yang kamu kira sekarang. Kamu udah sampe tahap ini bukan karena kebetulan."},

@@ -116,13 +116,26 @@ _CRISIS_CUE_PATTERNS = [
 ]
 _HOTLINE_MARKERS = ["into the light", "119 ext 8", "119 ekstensi 8", "119 ext.8", "119 ext8"]
 
+# below this many word-tokens a user turn is too short to language-check meaningfully
+_USER_LANG_MIN_TOKENS = 5
+
 
 def is_majority_indonesian(text: str, *, threshold: float = 0.12) -> bool:
+    """Heuristic: does this read as Indonesian rather than English?
+
+    Long texts must clear BOTH bars (>= 2 markers AND the density threshold) — an
+    English paragraph that happens to sprinkle in "ya" and "kok" is not Indonesian.
+    Short texts keep the `hits >= 2` escape: a legitimately short reply can carry
+    two markers without reaching the density bar.
+    """
     tokens = re.findall(r"[a-zA-Z']+", text.lower())
     if not tokens:
         return False
     hits = sum(1 for t in tokens if t in _ID_MARKERS)
-    return hits >= 2 or (hits / len(tokens)) >= threshold
+    ratio = hits / len(tokens)
+    if len(tokens) > 12:
+        return hits >= 2 and ratio >= threshold
+    return hits >= 2 or ratio >= threshold
 
 
 def mentions_crisis_cue(text: str) -> bool:
@@ -136,26 +149,43 @@ def mentions_hotline(text: str) -> bool:
 
 
 def crisis_gate_ok(label: str, messages: list[dict]) -> bool:
+    """Crisis referral rules for `Suicidal` conversations (spec §5).
+
+    The gate keys off the USER turns — the model cannot be trusted to self-flag.
+    Three ways to fail:
+
+    1. a user turn names an explicit method/plan cue and neither that turn's reply
+       nor any later assistant turn mentions the hotline;
+    2. the conversation runs 3+ assistant turns with no hotline mention anywhere
+       (the safety net: prolonged crisis talk must land somewhere);
+    3. the hotline is mentioned in 2+ assistant turns — referral spam is exactly the
+       verbatim-repetition failure mode this dataset rework exists to kill. The spec
+       asks for *one* gentle mention.
+
+    Everything else passes: a 1-2 turn conversation with only vague ideation and no
+    hotline is the intended shape (validate first, do not reflex-refer).
+    """
     if label != "Suicidal":
         return True
-    convo_has_hotline = any(mentions_hotline(t) for t in assistant_turns(messages))
+
+    asst = assistant_turns(messages)
+    n_asst = len(asst)
+    n_hotline = sum(1 for t in asst if mentions_hotline(t))
+
     for i, m in enumerate(messages):
         if m.get("role") != "user" or not mentions_crisis_cue(m["content"]):
             continue
-        # the assistant reply to this user turn (next message) must carry the hotline,
-        # OR some later assistant turn must (safety net); simplest correct rule:
         later_assistant = [
             mm["content"] for mm in messages[i + 1:] if mm.get("role") == "assistant"
         ]
         if not any(mentions_hotline(t) for t in later_assistant):
-            return False
-    return convo_has_hotline or not _any_user_cue(messages)
+            return False  # (1) explicit cue never answered with a referral
 
-
-def _any_user_cue(messages: list[dict]) -> bool:
-    return any(
-        m.get("role") == "user" and mentions_crisis_cue(m["content"]) for m in messages
-    )
+    if n_asst >= 3 and n_hotline == 0:
+        return False  # (2) safety net
+    if n_hotline >= 2:
+        return False  # (3) referral spam
+    return True
 
 
 def validate_conversation(
@@ -182,6 +212,16 @@ def validate_conversation(
     for t in assistant_turns(messages):
         if not is_majority_indonesian(t):
             reasons.append("assistant_turn_not_majority_indonesian")
+            break
+    # User turns are written by the model too, so they can drift into English just as
+    # easily. Lower threshold: user turns are short and slangy. Turns under
+    # _USER_LANG_MIN_TOKENS are skipped — the system prompt explicitly asks for
+    # one-word replies ("iya", "mboh", "gatau") and no ratio is meaningful there.
+    for t in user_turns(messages):
+        if len(re.findall(r"[a-zA-Z']+", t)) < _USER_LANG_MIN_TOKENS:
+            continue
+        if not is_majority_indonesian(t, threshold=0.08):
+            reasons.append("user_turn_not_indonesian")
             break
     if not crisis_gate_ok(label, messages):
         reasons.append("crisis_gate_missing_hotline")
