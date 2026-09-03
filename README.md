@@ -4,6 +4,8 @@ Model chat kesehatan mental 4-kelas (**Suicidal**, **Depression**, **Anxiety**, 
 di-fine-tune (LoRA) di atas `Llama-3.2-3B-Instruct`, ditujukan buat pengguna Gen Z yang
 capek/burnout — respons dengan nada santai, empatik, dan Bahasa Indonesia.
 
+<img width="1501" height="362" alt="Screenshot 2026-09-03 at 17 22 30" src="https://github.com/user-attachments/assets/b6056bb8-e456-4f4b-9e6a-29300f58862e" />
+
 ## Pendekatan
 
 - **Dataset**: disampling dari `ourafla/Mental-Health_Text-Classification_Dataset` (label
