@@ -38,7 +38,7 @@ Tidak memerlukan sitasi terpisah (baseline kategori, bukan klaim positif dari st
 - Dua sumber di atas fokus ke *linguistic markers* yang berkorelasi dengan kondisi mental,
   **bukan** kriteria diagnosis klinis formal (DSM-5 penuh) — respons yang digenerate
   diarahkan untuk **tidak** mengklaim diagnosis medis (lihat `SYSTEM_PROMPT` di
-  `scripts/generate_dataset.py`).
+  `scripts/companion_prompt.py`).
 - Label `status` dari dataset sumber dipakai apa adanya sebagai steering internal generate
   (krisis vs non-krisis) + kunci stratifikasi split. Balasan yang digenerate adalah respons
   companion — tidak menyebut kategori, tidak mengklaim diagnosis, tidak mengutip riset.

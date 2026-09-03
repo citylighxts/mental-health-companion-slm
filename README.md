@@ -35,7 +35,7 @@ dataset/processed/        # conversations.jsonl + train/valid/test.jsonl
 training/
   lora_config.yaml        # config LoRA (mlx-lm)
   adapters/                # (gitignored — hasil training, regenerate sendiri)
-docs/references.md         # sitasi jurnal buat grounding narasi tiap label
+docs/references.md         # acuan definisi keparahan tiap kategori (grounding sampling seed)
 ```
 
 ## Catatan
