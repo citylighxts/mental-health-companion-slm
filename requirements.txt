@@ -1,3 +1,4 @@
+# --- training / general (.venv, Python 3.14) ---
 anthropic
 mlx-lm
 torch==2.7.0
@@ -5,3 +6,4 @@ transformers
 coremltools
 safetensors
 huggingface_hub
+pytest            # dev: dataset validator + generator unit tests
