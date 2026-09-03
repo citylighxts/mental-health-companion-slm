@@ -8,22 +8,30 @@ capek/burnout — respons dengan nada santai, empatik, dan Bahasa Indonesia.
 
 ## Pendekatan
 
-- **Dataset**: disampling dari `ourafla/Mental-Health_Text-Classification_Dataset` (label
-  ground truth dari dataset asli). Claude (sebagai "mother LLM") generate narasi respons
-  gaya santai per label — lihat `docs/references.md` buat grounding linguistik yang dipakai.
+- **Framing**: teman curhat (companion), bukan alat klinis. 4 label
+  (`Suicidal`/`Depression`/`Anxiety`/`Normal`) dari `ourafla/Mental-Health_Text-Classification_Dataset`
+  dipakai hanya sebagai steering internal saat generate (aturan krisis vs non-krisis)
+  dan metadata buat stratified split — model tidak pernah menyebut label ke user.
+- **Dataset**: `scripts/generate_dataset.py` — tiap baris CSV di-transcreate Claude jadi
+  pesan chat orang pertama gaya Gen Z Indonesia (slang, typo, singkatan), lalu dilanjut
+  jadi percakapan 1–6 giliran. ~70% multi-turn. Tiap balasan asisten wajib lolos
+  validator di `scripts/dataset_validators.py` (nol tanda tanya, 1–4 kalimat, mayoritas
+  Bahasa Indonesia, aturan hotline krisis) — yang gagal di-regenerate lalu di-drop.
 - **Fine-tuning**: LoRA (rank 8, 16 layer terakhir) pakai [mlx-lm](https://github.com/ml-explore/mlx-lm)
-  di Apple Silicon, `mask_prompt=true` biar loss cuma dihitung dari respons assistant.
+  di Apple Silicon, `mask_prompt=true`.
 - **Target deployment**: on-device iOS (Core ML, kuantisasi INT4).
 
 ## Struktur
 
 ```
 scripts/
-  generate_narrative.py   # sampling + generate narasi pakai Claude
-  split_dataset.py        # stratified split train/valid/test
+  generate_dataset.py     # sampling + generate percakapan pakai Claude (+ validator)
+  dataset_validators.py   # cek struktur & gaya tiap percakapan (unit-tested)
+  companion_prompt.py     # system prompt + few-shot buat generate
+  split_dataset.py        # stratified split train/valid/test (label + turn-type)
   merge_lora_to_hf.py     # merge adapter LoRA (mlx) -> checkpoint HF PyTorch
   load_model.py           # utilitas load model
-dataset/processed/        # narrative_dataset.jsonl + train/valid/test.jsonl
+dataset/processed/        # conversations.jsonl + train/valid/test.jsonl
 training/
   lora_config.yaml        # config LoRA (mlx-lm)
   adapters/                # (gitignored — hasil training, regenerate sendiri)

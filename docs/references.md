@@ -1,8 +1,9 @@
 # Referensi — Grounding Narasi Kesehatan Mental
 
-Dipakai sebagai "ground truth" acuan pas Claude Sonnet 5 (mother LLM) generate narasi di
-`scripts/generate_narrative.py`. Pendekatan ini niru pola Tabel 3.1 di proposal TA (threshold
-yang disitasi dari jurnal terverifikasi), diterapkan ke domain kesehatan mental berbasis teks.
+Dipakai sebagai acuan definisi tingkat keparahan tiap kategori saat sampling seed di
+`scripts/generate_dataset.py`. Penanda linguistik di bawah **tidak** muncul di dalam
+balasan chatbot — model diposisikan sebagai teman curhat, bukan alat klasifikasi. Sitasi
+ini murni dokumentasi kenapa 4 kategori itu dipisah begitu.
 
 ## Suicidal
 
@@ -35,9 +36,9 @@ Tidak memerlukan sitasi terpisah (baseline kategori, bukan klaim positif dari st
 ## Catatan batasan
 
 - Dua sumber di atas fokus ke *linguistic markers* yang berkorelasi dengan kondisi mental,
-  **bukan** kriteria diagnosis klinis formal (DSM-5 penuh) — narasi hasil generate eksplisit
+  **bukan** kriteria diagnosis klinis formal (DSM-5 penuh) — respons yang digenerate
   diarahkan untuk **tidak** mengklaim diagnosis medis (lihat `SYSTEM_PROMPT` di
-  `generate_narrative.py`).
-- Dataset sumber (`ourafla/Mental-Health_Text-Classification_Dataset`) sudah punya label
-  ground truth sendiri (`status`) hasil kurasi dari 3 corpus publik — narasi yang digenerate
-  di sini **menjelaskan** label yang sudah ada, bukan menentukan ulang labelnya.
+  `scripts/generate_dataset.py`).
+- Label `status` dari dataset sumber dipakai apa adanya sebagai steering internal generate
+  (krisis vs non-krisis) + kunci stratifikasi split. Balasan yang digenerate adalah respons
+  companion — tidak menyebut kategori, tidak mengklaim diagnosis, tidak mengutip riset.
