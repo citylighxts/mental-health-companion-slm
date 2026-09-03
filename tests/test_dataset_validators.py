@@ -81,3 +81,59 @@ def test_no_repeated_replies():
         {"role": "assistant", "content": "capek itu valid banget aku dengerin"},
     ]
     assert dv.no_repeated_replies(dup) is False
+
+
+def test_is_majority_indonesian():
+    assert dv.is_majority_indonesian("Hari ini berat banget ya, tapi kamu udah ngejalanin sejauh ini.") is True
+    assert dv.is_majority_indonesian("This is a fully english sentence with no indonesian words at all.") is False
+
+
+def test_crisis_cue_and_hotline_detection():
+    assert dv.mentions_crisis_cue("tadi malem mikirin caranya buat ngilangin diri") is True
+    assert dv.mentions_crisis_cue("capek banget hari ini") is False
+    assert dv.mentions_hotline("hubungi Into The Light Indonesia 119 ext 8 ya") is True
+    assert dv.mentions_hotline("aku di sini kok") is False
+
+
+def test_crisis_gate_requires_hotline_after_explicit_cue():
+    convo_ok = [
+        {"role": "user", "content": "pengen berhenti aja rasanya"},
+        {"role": "assistant", "content": "Pengen berhenti itu sinyal kamu udah nahan beban berat kelamaan. Aku dengerin."},
+        {"role": "user", "content": "tadi malem sempet mikirin caranya buat ngilang"},
+        {"role": "assistant", "content": "Aku khawatir banget sama kamu. Tolong ngomong sama Into The Light Indonesia di 119 ext 8, mereka ada 24 jam."},
+    ]
+    assert dv.crisis_gate_ok("Suicidal", convo_ok) is True
+
+    convo_bad = [
+        {"role": "user", "content": "tadi malem sempet mikirin caranya buat bunuh diri"},
+        {"role": "assistant", "content": "Berat banget ya. Aku dengerin kok, nggak ke mana-mana."},
+    ]
+    assert dv.crisis_gate_ok("Suicidal", convo_bad) is False
+
+    # vague ideation, no cue -> hotline NOT required
+    convo_vague = [
+        {"role": "user", "content": "kadang pengen ilang aja"},
+        {"role": "assistant", "content": "Rasa pengen ilang itu berat banget dibawa sendirian. Kamu nggak sendirian ngadepin ini."},
+    ]
+    assert dv.crisis_gate_ok("Suicidal", convo_vague) is True
+    assert dv.crisis_gate_ok("Normal", convo_vague) is True  # gate only applies to Suicidal
+
+
+def test_validate_conversation_composes_all_checks():
+    good = {"label": "Anxiety", "messages": [
+        {"role": "user", "content": "besok interview gua panik parah"},
+        {"role": "assistant", "content": "Malam sebelum interview emang bikin kepala muter terus. Wajar kamu susah tenang."},
+        {"role": "user", "content": "takut blank"},
+        {"role": "assistant", "content": "Takut blank itu manusiawi. Kamu udah sampe tahap ini bukan karena kebetulan."},
+        {"role": "user", "content": "makasih"},
+        {"role": "assistant", "content": "Sama-sama. Kamu nggak harus nyelesain semua kekhawatiran itu malam ini."},
+    ]}
+    assert dv.validate_conversation(good, single_turn=False) == []
+
+    bad = {"label": "Anxiety", "messages": [
+        {"role": "user", "content": "besok interview"},
+        {"role": "assistant", "content": "Gimana perasaan kamu sekarang?"},
+    ]}
+    reasons = dv.validate_conversation(bad, single_turn=False)
+    assert any("question" in r for r in reasons)
+    assert any("turn_count" in r for r in reasons)
