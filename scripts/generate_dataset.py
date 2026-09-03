@@ -22,7 +22,9 @@ from pathlib import Path
 import anthropic
 
 from companion_prompt import SYSTEM_PROMPT, build_user_prompt
-from dataset_validators import VALID_LABELS, validate_conversation
+from dataset_validators import (
+    VALID_LABELS, _normalize, assistant_turns, validate_conversation,
+)
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_CSV = SCRIPT_DIR / "../dataset/raw/mental_heath_unbanlanced.csv"
@@ -88,30 +90,44 @@ def _call(client, model: str, prompt: str) -> str:
                 model=model,
                 max_tokens=2000,
                 system=SYSTEM_PROMPT,
+                # auto-caches the ~700-token system prompt across the whole run
+                cache_control={"type": "ephemeral"},
                 messages=[{"role": "user", "content": prompt}],
             )
             return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
-        except anthropic.RateLimitError:
+        except (anthropic.RateLimitError, anthropic.APIConnectionError,
+                anthropic.APITimeoutError):
+            # transient: a network blip must not abort a 1200-seed batch
+            if attempt == 3:
+                raise
             time.sleep(5 * (attempt + 1))
         except anthropic.APIStatusError as e:
             if getattr(e, "status_code", 0) >= 500 and attempt < 3:
                 time.sleep(5 * (attempt + 1))
                 continue
             raise
-    raise RuntimeError("rate limited past retry budget")
+    raise RuntimeError("retry budget exhausted")
 
 
 def generate_one(client, model: str, seed_row: dict, *, turns_min: int, turns_max: int,
-                 max_attempts: int = 3) -> dict | None:
+                 max_attempts: int = 3) -> tuple[dict | None, list[str]]:
+    """Return `(conversation, [])` on success, `(None, reasons)` once attempts run out.
+
+    The reasons come from the final attempt — returning them (rather than stashing
+    them on a function attribute) keeps the caller's tally from carrying stale
+    reasons over from a previous seed.
+    """
     prompt = build_user_prompt(
         seed_row["text"], seed_row["label"],
         single_turn=seed_row["single_turn"], target_turns=seed_row["target_turns"],
     )
+    last_reasons: list[str] = []
     for _ in range(max_attempts):
         raw = _call(client, model, prompt)
         try:
             messages = parse_response(raw)
         except ValueError:
+            last_reasons = ["parse_error"]
             continue
         candidate = {"label": seed_row["label"], "messages": messages}
         reasons = validate_conversation(
@@ -119,12 +135,51 @@ def generate_one(client, model: str, seed_row: dict, *, turns_min: int, turns_ma
             turns_min=turns_min, turns_max=turns_max,
         )
         if not reasons:
-            return candidate
-        generate_one.last_reasons = reasons  # for stats
-    return None
+            return candidate, []
+        last_reasons = reasons
+    return None, last_reasons or ["parse_error"]
 
 
-generate_one.last_reasons = []
+def sidecar_path(out_path) -> Path:
+    """Progress file next to the output: one JSON-encoded seed text per processed seed."""
+    return Path(str(out_path) + ".seeds")
+
+
+def already_done(sidecar) -> set[str]:
+    """Seed texts a previous (interrupted) run already processed — kept or dropped."""
+    p = Path(sidecar)
+    if not p.exists():
+        return set()
+    done: set[str] = set()
+    with open(p) as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                done.add(json.loads(line))
+            except json.JSONDecodeError:
+                done.add(line)  # tolerate a hand-edited / half-written line
+    return done
+
+
+def report_repeated_replies(out_path, *, top: int = 10) -> None:
+    """Corpus-level duplicate check — a safe-closer collapse hides from per-convo checks."""
+    counts: Counter = Counter()
+    total = 0
+    with open(out_path) as f:
+        for line in f:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            total += 1
+            counts.update(_normalize(t) for t in assistant_turns(row["messages"]))
+    if not counts:
+        return
+    print("\ntop repeated assistant turns (watch for a safe-closer collapse):")
+    for text, n in counts.most_common(top):
+        share = f"{n / total:.1%}" if total else "-"
+        print(f"  {n:4d}  ({share} of convos)  {text[:90]}")
 
 
 def main() -> None:
@@ -164,27 +219,52 @@ def main() -> None:
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    kept, dropped = 0, 0
-    drop_reasons: Counter = Counter()
-    with open(out_path, "w") as f:
-        for i, seed_row in enumerate(seeds, 1):
-            result = generate_one(
-                client, args.model, seed_row,
-                turns_min=args.turns_min, turns_max=args.turns_max,
-            )
-            if result is None:
-                dropped += 1
-                drop_reasons.update(generate_one.last_reasons or ["parse_or_unknown"])
-            else:
-                f.write(json.dumps(result, ensure_ascii=False) + "\n")
-                f.flush()
-                kept += 1
-            if i % 25 == 0 or i == len(seeds):
-                print(f"  [{i}/{len(seeds)}] kept={kept} dropped={dropped}")
+    sidecar = sidecar_path(out_path)
+    done = already_done(sidecar)
+    # Resume only when a sidecar survives from an interrupted run; a fresh run starts
+    # the output file clean so a re-run never silently doubles the dataset.
+    mode = "a" if done else "w"
+    if done:
+        print(f"resuming: {len(done)} seeds already processed (from {sidecar.name})")
 
-    print(f"\nWrote {kept} conversations -> {out_path}  (dropped {dropped})")
+    kept, dropped, skipped = 0, 0, 0
+    drop_reasons: Counter = Counter()
+    with open(out_path, mode) as f, open(sidecar, "a") as sf:
+        for i, seed_row in enumerate(seeds, 1):
+            if seed_row["text"] in done:
+                skipped += 1
+                continue
+            try:
+                result, reasons = generate_one(
+                    client, args.model, seed_row,
+                    turns_min=args.turns_min, turns_max=args.turns_max,
+                )
+            except Exception as e:  # one bad seed must never kill the batch
+                print(f"  ! seed {i} failed: {type(e).__name__}: {e}")
+                dropped += 1
+                drop_reasons[f"exception:{type(e).__name__}"] += 1
+                result = None
+            else:
+                if result is None:
+                    dropped += 1
+                    drop_reasons.update(reasons or ["parse_or_unknown"])
+                else:
+                    f.write(json.dumps(result, ensure_ascii=False) + "\n")
+                    f.flush()
+                    kept += 1
+            sf.write(json.dumps(seed_row["text"], ensure_ascii=False) + "\n")
+            sf.flush()
+            if i % 25 == 0 or i == len(seeds):
+                print(f"  [{i}/{len(seeds)}] kept={kept} dropped={dropped} skipped={skipped}")
+
+    # clean completion: the loop finished, so the progress file has done its job
+    if sidecar.exists():
+        os.remove(sidecar)
+
+    print(f"\nWrote {kept} conversations -> {out_path}  (dropped {dropped}, skipped {skipped})")
     if drop_reasons:
         print("drop reasons:", dict(drop_reasons))
+    report_repeated_replies(out_path)
 
 
 if __name__ == "__main__":
