@@ -76,10 +76,10 @@ final class ChatViewModel: ObservableObject {
         isModelLoading = true
         loadError = nil
         do {
-            guard let modelURL = Bundle.main.url(
-                forResource: "MentalHealthCompanionInt4", withExtension: "mlmodelc"
+            guard let mlpackageURL = Bundle.main.url(
+                forResource: "MentalHealthCompanionInt4", withExtension: "mlpackage"
             ) else {
-                loadError = "Model file (MentalHealthCompanionInt4.mlmodelc) not found in app bundle."
+                loadError = "Model file (MentalHealthCompanionInt4.mlpackage) not found in app bundle."
                 isModelLoading = false
                 return
             }
@@ -89,19 +89,18 @@ final class ChatViewModel: ObservableObject {
                 return
             }
             let tok = try await AutoTokenizer.from(modelFolder: resourceURL)
+            // NOTE — KNOWN ISSUE, see ../README.md "KNOWN ISSUE" section:
+            // this currently fails to load on iOS (Simulator AND physical device,
+            // every computeUnits option, both this runtime-compile path and
+            // Xcode's build-time precompiled .mlmodelc) with error -14, a
+            // confirmed unfixed Apple bug (apple/coremltools#2548) triggered by
+            // this model's fixed-shape state + RangeDim-flexible inputs. The
+            // identical model + generation logic IS verified correct on macOS —
+            // see coreml-debug-test/. Runtime-compiling here (rather than loading
+            // Xcode's precompiled .mlmodelc) didn't change the outcome, but is
+            // kept since it matches the known-working coreml-debug-test/ path.
+            let modelURL = try await MLModel.compileModel(at: mlpackageURL)
             let config = MLModelConfiguration()
-            // .all (CPU+GPU+ANE) is required for correct output on a real device.
-            //
-            // IMPORTANT — iOS SIMULATOR CANNOT RUN THIS MODEL CORRECTLY AT ALL:
-            // the Simulator has no real Neural Engine (only a software fallback),
-            // and every compute-unit combination was tried and confirmed broken
-            // there: .cpuOnly loads but produces degenerate/repetitive output;
-            // .cpuAndGPU / .all fails to even build an execution plan (error -14);
-            // .cpuAndNeuralEngine loads but is equally degenerate. This was
-            // verified against the identical prefill+decode logic running natively
-            // on macOS (coreml-debug-test/), which produces correct, on-tone
-            // output with .all — so the bug is a Simulator limitation, not this
-            // code. Test this app on a physical device.
             config.computeUnits = .all
             let model = try MLModel(contentsOf: modelURL, configuration: config)
             tokenizer = tok

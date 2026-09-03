@@ -10,17 +10,17 @@
 		14086852145F98FC86E2FA40 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0962D34C0D3025D6A71D1286 /* ChatMessage.swift */; };
 		1AEC2CB8CD14DC4BA69DF3C4 /* tokenizer.json in Resources */ = {isa = PBXBuildFile; fileRef = 2A2FB855ECD59E8DAD07964B /* tokenizer.json */; };
 		4FB1895F9B78C53B64826628 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EA948368A835B4172128A0 /* ContentView.swift */; };
+		837AEC0A4980FA1B1C3C27AB /* MentalHealthCompanionInt4.mlpackage in Resources */ = {isa = PBXBuildFile; fileRef = 00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */; };
 		8E1530721A27CC57A2930173 /* special_tokens_map.json in Resources */ = {isa = PBXBuildFile; fileRef = 097852972E4AD017D6C2499A /* special_tokens_map.json */; };
 		9BF00141AD5B25352A61DA04 /* MentalHealthCompanionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4F0244587BD443F39FFA86 /* MentalHealthCompanionApp.swift */; };
 		AA7E6F962D03DF6EAD0C4F6E /* chat_template.jinja in Resources */ = {isa = PBXBuildFile; fileRef = 34299E47D92FF16FDCB9C307 /* chat_template.jinja */; };
 		AECEF81ADC6921E477E37C58 /* Tokenizers in Frameworks */ = {isa = PBXBuildFile; productRef = 8B2588260E76DD3962873CE5 /* Tokenizers */; };
-		B6C6A006E9F17D8665757510 /* MentalHealthCompanionInt4.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */; };
 		C2E8284494DA19F47CA0E0E6 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2F80DDDC8CD0F9FE2C303 /* ChatViewModel.swift */; };
 		DDD24408521F189599DCBB84 /* tokenizer_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 7D655411E82A5F7AA2295CB7 /* tokenizer_config.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */ = {isa = PBXFileReference; path = MentalHealthCompanionInt4.mlpackage; sourceTree = "<group>"; };
+		00DD0C52791D700BA22FF2E8 /* MentalHealthCompanionInt4.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = MentalHealthCompanionInt4.mlpackage; path = MentalHealthCompanion/Resources/MentalHealthCompanionInt4.mlpackage; sourceTree = SOURCE_ROOT; };
 		0962D34C0D3025D6A71D1286 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		097852972E4AD017D6C2499A /* special_tokens_map.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = special_tokens_map.json; sourceTree = "<group>"; };
 		29E501363142C53305091DD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -118,6 +118,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					6D9B70AECA0688D6767A6A3A = {
+						DevelopmentTeam = 984P4SW3VJ;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = D50104A7C29E3DFF9018CEF6 /* Build configuration list for PBXProject "MentalHealthCompanion" */;
@@ -147,6 +151,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				837AEC0A4980FA1B1C3C27AB /* MentalHealthCompanionInt4.mlpackage in Resources */,
 				AA7E6F962D03DF6EAD0C4F6E /* chat_template.jinja in Resources */,
 				8E1530721A27CC57A2930173 /* special_tokens_map.json in Resources */,
 				1AEC2CB8CD14DC4BA69DF3C4 /* tokenizer.json in Resources */,
@@ -165,7 +170,6 @@
 				C2E8284494DA19F47CA0E0E6 /* ChatViewModel.swift in Sources */,
 				4FB1895F9B78C53B64826628 /* ContentView.swift in Sources */,
 				9BF00141AD5B25352A61DA04 /* MentalHealthCompanionApp.swift in Sources */,
-				B6C6A006E9F17D8665757510 /* MentalHealthCompanionInt4.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +181,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 984P4SW3VJ;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = MentalHealthCompanion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -260,7 +266,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 984P4SW3VJ;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = MentalHealthCompanion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

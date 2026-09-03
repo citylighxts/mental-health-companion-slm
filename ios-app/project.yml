@@ -17,6 +17,8 @@ targets:
         excludes:
           - "Resources/**"
       - path: MentalHealthCompanion/Resources/MentalHealthCompanionInt4.mlpackage
+        type: folder
+        buildPhase: resources
       - path: MentalHealthCompanion/Resources/tokenizer.json
       - path: MentalHealthCompanion/Resources/tokenizer_config.json
       - path: MentalHealthCompanion/Resources/special_tokens_map.json
@@ -31,6 +33,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.hanaazizah.mentalhealthcompanion
+        DEVELOPMENT_TEAM: 984P4SW3VJ
+        CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
         MARKETING_VERSION: "1.0"
