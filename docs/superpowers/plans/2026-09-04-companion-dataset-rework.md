@@ -1383,6 +1383,11 @@ print('assistant turns with ?:', q)
 ```
 Expected: total ≈ 1150–1200; labels roughly balanced; multi-turn frac ≈ 0.65–0.72; **assistant turns with `?`: 0**.
 
+Also read the `top repeated assistant turns` table the generator prints at the end of
+Step 3. Per-conversation validation cannot see a corpus-wide safe-closer collapse — if
+any single normalised assistant turn appears in more than ~5% of conversations, the model
+has settled into a template. Tune `SYSTEM_PROMPT` and re-run rather than shipping it.
+
 - [ ] **Step 5: Split and check**
 
 ```bash

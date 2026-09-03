@@ -40,7 +40,14 @@ docs/references.md         # acuan definisi keparahan tiap kategori (grounding s
 
 ## Catatan
 
-- Untuk kasus krisis (label `Suicidal`), respons selalu mengarahkan ke hotline
-  **Into The Light Indonesia — 119 ext 8**.
+- **Dataset perlu di-generate dulu sebelum training.** `dataset/processed/{train,valid,test}.jsonl`
+  sekarang dihasilkan ulang oleh `scripts/generate_dataset.py` (bikin `conversations.jsonl`)
+  lalu `scripts/split_dataset.py` — lihat `docs/superpowers/plans/2026-09-04-companion-dataset-rework.md`
+  Task 7 buat runbook-nya (butuh API key, sekitar 1200 call). Data single-turn yang lama
+  disimpan sebagai `*.jsonl.bak`; jadi kalau langsung `mlx_lm.lora` tanpa generation run,
+  nggak ada data latih yang kepakai.
+- Untuk kasus krisis (label `Suicidal`), respons mengarahkan ke hotline
+  **Into The Light Indonesia — 119 ext 8** — tepat sekali, di giliran yang pas
+  (bukan tiap balasan).
 - Model & checkpoint (`models/`, `training/adapters/`) sengaja tidak disertakan di repo
   ini (ukuran GB) — regenerate lewat `training/lora_config.yaml` + `mlx_lm.lora`.

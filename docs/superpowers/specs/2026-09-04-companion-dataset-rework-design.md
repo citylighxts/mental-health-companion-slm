@@ -167,10 +167,12 @@ A sample is regenerated (≤3 attempts) then dropped if any check fails:
 | Turn count | matches requested (1 for single-turn; 3–6 for multi-turn) |
 | Role order | strictly alternating, starts `user`, ends `assistant` |
 | Reply length | each assistant turn ≤ 4 sentences and ≥ 15 chars |
-| Language | assistant turns majority-Indonesian (heuristic: ID stopword ratio) |
+| Language | assistant turns majority-Indonesian (heuristic: ID stopword ratio); user turns checked too, at a lower threshold |
 | No dupes | near-exact duplicate assistant turns within a conversation rejected |
-| Crisis gate | if `label == Suicidal` and any assistant turn names a method/plan cue,
-  a hotline mention must be present |
+| Crisis gate | if `label == Suicidal` and a **user** turn names a method/plan cue, a hotline
+  mention must appear in that turn's reply or later; and a 3+ turn `Suicidal` conversation
+  with no hotline, or one with 2+ hotline mentions, fails. The gate keys off the user turn,
+  not the assistant turn — the model cannot be trusted to self-flag a crisis. |
 | JSON | parses; only `role`/`content` keys; roles in {user, assistant} |
 
 Counts of drops/regens per reason are printed at the end for a quality read.
