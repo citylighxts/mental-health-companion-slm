@@ -107,6 +107,23 @@ def test_is_majority_indonesian_long_english_is_not_saved_by_two_markers():
     assert dv.is_majority_indonesian("Aku di sini kok. Pelan-pelan aja.") is True
 
 
+def test_is_majority_indonesian_gen_z_openers():
+    """Long, slangy Gen Z openers with few 'literary' markers must still read as ID."""
+    for opener in [
+        "anjir besok interview nih gua deg2an parah gabisa tidur",
+        "capek bat rasanya pengen berhenti aja",
+        "sumpah tiap hari gini gaada abisnya males banget",
+        "lagi gabut parah gatau mau ngapain",
+    ]:
+        assert dv.is_majority_indonesian(opener) is True, opener
+
+    # the review's English string must still be rejected
+    assert dv.is_majority_indonesian(
+        "That sounds genuinely exhausting ya, and it makes sense that you would "
+        "feel completely drained right now honestly."
+    ) is False
+
+
 def test_crisis_cue_and_hotline_detection():
     assert dv.mentions_crisis_cue("tadi malem mikirin caranya buat ngilangin diri") is True
     assert dv.mentions_crisis_cue("capek banget hari ini") is False

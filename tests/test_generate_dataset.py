@@ -130,12 +130,26 @@ def test_call_survives_a_transient_timeout(monkeypatch):
     assert len(client.messages.calls) == 2
 
 
-def test_call_passes_cache_control():
+def test_call_caches_the_system_prefix_not_the_user_message():
     client = FakeClient([_good_convo_json(single=True)])
     row = {"text": "hari ini biasa aja", "label": "Normal",
            "single_turn": True, "target_turns": 1}
     gd.generate_one(client, "fake-model", row, turns_min=3, turns_max=6)
-    assert client.messages.calls[0]["cache_control"] == {"type": "ephemeral"}
+    call = client.messages.calls[0]
+
+    # the breakpoint is on the stable system block, not a top-level kwarg
+    assert "cache_control" not in call
+    system = call["system"]
+    assert isinstance(system, list)
+    assert system[-1]["cache_control"] == {"type": "ephemeral"}
+
+    # the few-shot examples ride along in the cached system text...
+    assert "anjir besok interview nih gua deg2an parah gabisa tidur" in system[-1]["text"]
+    # ...and are NOT concatenated into the varying user message
+    user_msg = call["messages"][0]["content"]
+    assert "# contoh" not in user_msg
+    assert '"messages"' not in user_msg
+    assert "hari ini biasa aja" in user_msg
 
 
 def test_already_done_reads_and_tolerates_missing_sidecar(tmp_path):
@@ -213,3 +227,21 @@ def test_report_repeated_replies_prints_top_offenders(tmp_path, capsys):
     assert "top repeated assistant turns" in printed
     assert "aku di sini kok santai aja dulu ya" in printed
     assert "100.0%" in printed
+
+
+def test_report_repeated_replies_tolerates_a_truncated_final_line(tmp_path, capsys):
+    """A hard kill mid-write leaves a half-written last line — the report must not crash."""
+    out = tmp_path / "conversations.jsonl"
+    good = json.dumps({"label": "Normal", "messages": [
+        {"role": "user", "content": "halo"},
+        {"role": "assistant", "content": "Aku di sini kok. Santai aja dulu ya."},
+    ]})
+    with open(out, "w") as f:
+        f.write(good + "\n")
+        f.write(good + "\n")
+        f.write('{"label": "Normal", "mess')  # truncated, no newline
+
+    gd.report_repeated_replies(out)  # must not raise
+    printed = capsys.readouterr().out
+    assert "aku di sini kok santai aja dulu ya" in printed
+    assert "100.0%" in printed  # 2/2 good rows — the truncated line was skipped

@@ -21,7 +21,7 @@ from pathlib import Path
 
 import anthropic
 
-from companion_prompt import SYSTEM_PROMPT, build_user_prompt
+from companion_prompt import SYSTEM_PROMPT_CACHED, build_user_prompt
 from dataset_validators import (
     VALID_LABELS, _normalize, assistant_turns, validate_conversation,
 )
@@ -89,9 +89,15 @@ def _call(client, model: str, prompt: str) -> str:
             resp = client.messages.create(
                 model=model,
                 max_tokens=2000,
-                system=SYSTEM_PROMPT,
-                # auto-caches the ~700-token system prompt across the whole run
-                cache_control={"type": "ephemeral"},
+                # One explicit breakpoint on the stable system text (prompt + few-shot
+                # block). It is byte-identical every call, so after the first write the
+                # whole ~2k-token prefix is a cache read for the rest of the run. The
+                # per-seed user message stays uncached (it varies) — which is correct.
+                system=[{
+                    "type": "text",
+                    "text": SYSTEM_PROMPT_CACHED,
+                    "cache_control": {"type": "ephemeral"},
+                }],
                 messages=[{"role": "user", "content": prompt}],
             )
             return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
@@ -106,6 +112,8 @@ def _call(client, model: str, prompt: str) -> str:
                 time.sleep(5 * (attempt + 1))
                 continue
             raise
+    # unreachable: attempt 3 always returns or re-raises above. Kept as a
+    # belt-and-braces guard against future edits to the retry logic.
     raise RuntimeError("retry budget exhausted")
 
 
@@ -171,9 +179,13 @@ def report_repeated_replies(out_path, *, top: int = 10) -> None:
         for line in f:
             if not line.strip():
                 continue
-            row = json.loads(line)
+            try:
+                row = json.loads(line)
+                turns = assistant_turns(row["messages"])
+            except (json.JSONDecodeError, KeyError, TypeError):
+                continue  # a hard kill mid-write can leave a truncated final line
             total += 1
-            counts.update(_normalize(t) for t in assistant_turns(row["messages"]))
+            counts.update(_normalize(t) for t in turns)
     if not counts:
         return
     print("\ntop repeated assistant turns (watch for a safe-closer collapse):")

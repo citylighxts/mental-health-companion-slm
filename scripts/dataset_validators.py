@@ -101,10 +101,20 @@ def no_repeated_replies(messages: list[dict], *, similarity: float = 0.9) -> boo
 # --- content checks ---
 
 _ID_MARKERS = {
-    "yang", "nggak", "ga", "gak", "aku", "kamu", "banget", "aja", "udah", "lagi",
-    "tuh", "sih", "kok", "deh", "ya", "di", "ke", "itu", "ini", "dari", "buat",
-    "sama", "juga", "kalau", "kalo", "biar", "emang", "masih", "terus", "gitu",
-    "nggak", "harus", "bukan", "kayak", "lah", "dong", "nih", "kan",
+    # function words / discourse particles (assistant + user register)
+    "yang", "nggak", "nggk", "ga", "gak", "gk", "aku", "kamu", "banget", "bgt",
+    "aja", "udah", "lagi", "tuh", "sih", "kok", "deh", "ya", "di", "ke", "itu",
+    "ini", "dari", "buat", "sama", "juga", "kalau", "kalo", "biar", "emang",
+    "masih", "terus", "trus", "gitu", "harus", "bukan", "kayak", "kayaknya",
+    "kek", "lah", "dong", "nih", "kan", "doang", "soalnya", "tapi", "mending",
+    "gaada", "mau", "pengen", "pengin", "pengennya", "kepikiran", "rasanya",
+    # Gen Z / Jakartan slang + pronouns
+    "anjir", "anjay", "njir", "jir", "gua", "gue", "gw", "lu", "lo", "elu",
+    "gabut", "mager", "bat", "parah",
+    # everyday content words that are not also English
+    "capek", "cape", "capai", "males", "malas", "lelah", "pusing", "bingung",
+    "takut", "sedih", "marah", "nangis", "semangat", "hari", "orang", "badan",
+    "tidur", "bangun", "kerja", "kuliah", "sekolah", "temen", "teman",
 }
 
 _CRISIS_CUE_PATTERNS = [

@@ -1,6 +1,8 @@
 """System prompt, few-shot examples, and per-seed user prompt for dataset generation."""
 from __future__ import annotations
 
+import json
+
 SYSTEM_PROMPT = """\
 Kamu bikin data latih untuk chatbot teman curhat berbahasa Indonesia gaya Gen Z.
 Persona bot: teman sebaya yang empatik dan kadang capek juga — BUKAN konselor, BUKAN dokter.
@@ -100,13 +102,21 @@ FEWSHOT = [
 
 
 def _fewshot_block() -> str:
-    import json
     lines = []
     for ex in FEWSHOT:
         mode = "single-turn" if ex["single_turn"] else f"{len(ex['messages']) // 2}-turn"
         lines.append(f"# contoh ({ex['label']}, {mode})")
         lines.append(json.dumps({"messages": ex["messages"]}, ensure_ascii=False))
     return "\n".join(lines)
+
+
+# Rendered once at import. This text is identical on every call, so it belongs in a
+# cached system block — NOT concatenated into the per-seed user message (where it
+# could never cache).
+FEWSHOT_BLOCK = _fewshot_block()
+
+# The full stable system text sent (and cached) on every generation call.
+SYSTEM_PROMPT_CACHED = SYSTEM_PROMPT + "\n\n## Contoh percakapan\n\n" + FEWSHOT_BLOCK
 
 
 def build_user_prompt(post: str, label: str, *, single_turn: bool, target_turns: int) -> str:
@@ -116,8 +126,6 @@ def build_user_prompt(post: str, label: str, *, single_turn: bool, target_turns:
         else f"Buat percakapan {target_turns} giliran (jadi {target_turns} pesan user + {target_turns} pesan assistant, selang-seling)."
     )
     return (
-        f"{_fewshot_block()}\n\n"
-        f"---\n"
         f"Postingan (Inggris): \"{post}\"\n"
         f"Kategori (ground truth, jangan disebut ke user): {label}\n"
         f"{turns_line}\n"
