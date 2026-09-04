@@ -1366,6 +1366,14 @@ python scripts/generate_dataset.py --n-per-class 300 2>&1 | tee /tmp/gen.log
 ```
 Expected: `Wrote ~1150-1200 conversations -> dataset/processed/conversations.jsonl`. Inspect the printed `drop reasons` — if any single reason is > 10% of attempts, fix the prompt and re-run.
 
+**Resume contract.** The progress sidecar (`dataset/processed/conversations.jsonl.seeds`)
+keys on seed **text**, not row index. A resumed run therefore MUST use the identical
+`--csv`, `--n-per-class`, and `--seed` as the interrupted one — any of those changing
+reshuffles or repopulates the seed pool and the run will mis-skip (skip the wrong rows,
+or none). To start over cleanly, delete **both** `conversations.jsonl` and
+`conversations.jsonl.seeds` first. On a clean finish the sidecar is removed automatically;
+if it is still there, the previous run did not complete.
+
 - [ ] **Step 4: Sanity-check the dataset**
 
 ```bash
